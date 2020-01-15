@@ -1,0 +1,25 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header">
+    <title>Won Mart</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<div class="container">
+    <div th:replace="fragments/bodyHeader :: bodyHeader" />
+    <div class="jumbotron">
+        <h1>WON MART</h1>
+        <p class="lead"> 나눌수록 행복한 간편 중고거래 장터 </p>
+        <p>
+            <a class="btn btn-lg btn-outline-dark" href="/member/new">회원가입</a>
+            <a class="btn btn-lg btn-outline-dark" href="/member">회원목록</a>
+        </p>
+        <p>
+            <a class="btn btn-lg btn-outline-success" href="/item/new">판매하기</a>
+            <a class="btn btn-lg btn-outline-success" href="/item">구매하기</a>
+        </p>
+    </div>
+    <div th:replace="fragments/footer :: footer" />
+</div>
+</body>
+</html>
