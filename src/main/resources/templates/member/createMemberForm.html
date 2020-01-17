@@ -28,7 +28,7 @@
                    th:class="${#fields.hasErrors('street')}? 'form-control fieldError' : 'form-control'">
             <p th:if="${#fields.hasErrors('street')}" th:errors="*{street}"></p>
         </div>
-        <button type="submit" class="btn btn-outline-success">SUBMIT</button>
+        <button type="submit" class="btn btn-outline-dark">SUBMIT</button>
     </form><br/>
     <div th:replace="fragments/footer :: footer"/>
 </div>

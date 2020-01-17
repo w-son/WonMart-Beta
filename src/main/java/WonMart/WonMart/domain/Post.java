@@ -26,7 +26,7 @@ public class Post {
     private int price;
 
     // https://freehoon.tistory.com/123 텍스트 편집기 reference
-    private TextArea body;
+    private String body;
 
     /*
      1) Many관계에 있는 엔티티에 Foreign Key가 존재하고 이 엔티티가 연관관계의 주인이다
@@ -40,7 +40,7 @@ public class Post {
      생성 메서드
      NoArgsConstructor annotation을 통해 생성 메서드로만 객체 생성
      */
-    public static Post createPost(Member member, String title, int price, TextArea body) {
+    public static Post createPost(Member member, String title, int price, String body) {
         Post post = new Post();
         member.addPost(post);
         post.setTitle(title);

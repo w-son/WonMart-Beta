@@ -20,10 +20,10 @@ public class LetterService { // 생성, 조회
     private final MemberRepository memberRepository;
 
     @Transactional
-    public Long send(Long memberId, String sender, String receiver, TextArea body) {
-        userDoesNotExist(sender);
-        Member member = memberRepository.findOne(memberId);
-        Letter letter = Letter.createLetter(member, sender, receiver, body);
+    public Long send(String sender, String receiver, String body) {
+        userDoesNotExist(receiver);
+        List<Member> members = memberRepository.findByNickName(sender);
+        Letter letter = Letter.createLetter(members.get(0), sender, receiver, body);
         letterRepository.save(letter);
 
         return letter.getId();

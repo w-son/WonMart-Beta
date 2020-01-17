@@ -22,7 +22,7 @@ public class Letter {
 
     private LocalDateTime letterTime;
 
-    private TextArea body;
+    private String body;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "member_id")
@@ -31,8 +31,9 @@ public class Letter {
     /*
      생성메서드
      NoArgsConstructor annotation을 통해 생성 메서드로만 객체 생성
+     생성된 쪽지는 송신자 멤버와 다대일 매핑되게 설계하였음
      */
-    public static Letter createLetter(Member member, String sender, String receiver, TextArea body) {
+    public static Letter createLetter(Member member, String sender, String receiver, String body) {
         Letter letter = new Letter();
         member.addLetter(letter);
         letter.setSender(sender);

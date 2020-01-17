@@ -21,9 +21,9 @@ public class PostService { // 생성, 삭제, 수정, 조회
     private final MemberRepository memberRepository;
 
     @Transactional
-    public Long post(Long memberId, String title, int price, TextArea body) {
-        Member member = memberRepository.findOne(memberId);
-        Post post = Post.createPost(member, title, price, body);
+    public Long post(String nickName, String title, int price, String body) {
+        List<Member> members = memberRepository.findByNickName(nickName);
+        Post post = Post.createPost(members.get(0), title, price, body);
         postRepository.save(post);
 
         return post.getId();
@@ -35,7 +35,7 @@ public class PostService { // 생성, 삭제, 수정, 조회
     }
 
     @Transactional
-    public void updatePost(Long id, String title, int price, TextArea body) {
+    public void updatePost(Long id, String title, int price, String body) {
         // 변경 감지
         Post post = postRepository.findOne(id);
 
