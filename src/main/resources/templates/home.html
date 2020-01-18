@@ -10,6 +10,16 @@
     <div class="jumbotron">
         <h1>WON MART</h1>
         <p class="lead"> 나눌수록 행복한 간편 중고거래 장터 </p>
+
+        <p id="kakao_id_login" style="text-align: center">
+            <a href= "https://kauth.kakao.com/oauth/authorize?client_id=46755ba94eb707cd876dbfd1b716ceab&redirect_uri=http://localhost:8080/kakaoLogin&response_type=code">
+                <img src="img/kakao_account_login_btn_medium_narrow.png"/>
+            </a>
+        </p>
+
+        <p th:text="${session.email}"></p>
+        <p th:text="${session.nickName}"></p>
+
         <p>
             <a class="btn btn-lg btn-outline-dark" href="/member/new">회원가입</a>
             <a class="btn btn-lg btn-outline-dark" href="/member">회원목록</a>
