@@ -29,6 +29,12 @@ public class MemberRepository {
                 .getResultList();
     }
 
+    public List<Member> findByKakaoKey(String kakaoKey) {
+        return em.createQuery("select m from Member m where m.kakaoKey = :kakaoKey", Member.class)
+                .setParameter("kakaoKey", kakaoKey)
+                .getResultList();
+    }
+
     public List<Member> findByNickName(String nickName) {
         return em.createQuery("select m from Member m where m.nickName = :nickName", Member.class)
                 .setParameter("nickName", nickName)

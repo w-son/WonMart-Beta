@@ -30,13 +30,13 @@ public class MemberService { // 생성, 삭제, 수정, 조회
      */
     @Transactional
     public Long join(Member member) {
-        validateDuplicateMember(member.getNickName());
+        validateDuplicateNickName(member.getNickName());
         memberRepository.save(member);
         return member.getId();
     }
 
     // 중복 닉네임을 확인하는 로직
-    private void validateDuplicateMember(String nickName) {
+    private void validateDuplicateNickName(String nickName) {
         List<Member> findMembers = memberRepository.findByNickName(nickName);
         if(!findMembers.isEmpty()) {
             throw new IllegalStateException("이미 존재하는 닉네임입니다.");
@@ -56,7 +56,7 @@ public class MemberService { // 생성, 삭제, 수정, 조회
          transaction이 끝나고 영속성 컨텍스트가 반환될때 변경사항이 데이터베이스에 저장된다
          */
         Member member = memberRepository.findOne(id);
-        validateDuplicateMember(nickName);
+        validateDuplicateNickName(nickName);
 
         member.setNickName(nickName);
         member.setAddress(address);
@@ -68,6 +68,14 @@ public class MemberService { // 생성, 삭제, 수정, 조회
 
     public List<Member> findMembers() {
         return memberRepository.findAll();
+    }
+
+    public List<Member> findByKakaoKey(String kakaoKey) {
+        return memberRepository.findByKakaoKey(kakaoKey);
+    }
+
+    public List<Member> findByNickName(String nickName) {
+        return memberRepository.findByNickName(nickName);
     }
 
 }

@@ -1,7 +1,10 @@
 package WonMart.WonMart.controller;
 
+import WonMart.WonMart.domain.Member;
+import WonMart.WonMart.service.MemberService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
@@ -24,6 +27,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,13 +44,19 @@ import java.util.List;
  -> response를 ObjectMapping 한 후에 원하는 정보를 JsonNode에 담아서 리턴
  */
 @Controller
+@RequiredArgsConstructor
 public class KakaoController {
+
+    private final MemberService memberService;
 
     private final static String CLIENT_ID = "46755ba94eb707cd876dbfd1b716ceab";
     private final static String REDIRECT_URI = "http://localhost:8080/kakaoLogin";
 
     /*
-     https://kauth.kakao.com/oauth/authorize?client_id=46755ba94eb707cd876dbfd1b716ceab&redirect_uri=http://localhost:8080/kakaoLogin&response_type=code
+     https://kauth.kakao.com/oauth/authorize
+     ?client_id=46755ba94eb707cd876dbfd1b716ceab
+     &redirect_uri=http://localhost:8080/kakaoLogin
+     &response_type=code
      이 링크를 통해서 접근 토큰을 생성할 수 있는 code 를 GET한다
      */
 
@@ -82,12 +94,11 @@ public class KakaoController {
     }
 
     // 접근 토큰을 통해서 사용자 정보 추출
-    public JsonNode getKakaoUserInfo(String authorize_code) {
+    public JsonNode getKakaoUserInfo(String accessToken) {
 
         final String RequestUrl = "https://kapi.kakao.com/v1/user/me";
         final HttpClient client = HttpClientBuilder.create().build();
         final HttpPost post = new HttpPost(RequestUrl);
-        String accessToken = getAccessToken(authorize_code);
 
         post.addHeader("Authorization", "Bearer " + accessToken);
         JsonNode returnNode = null;
@@ -109,16 +120,20 @@ public class KakaoController {
         return returnNode;
     }
 
-    @GetMapping("/kakaoLogin")
-    public String createKakaoLogin(Model model, @RequestParam("code") String code, HttpSession session) throws Exception {
+    @RequestMapping("/kakaoLogin")
+    public String kakaoLogin(Model model, @RequestParam("code") String code, HttpSession session) throws Exception {
 
         // 코드를 통해 접근토큰을 생성하고 생성된 토큰을 이용해 사용자의 정보를 불러온다
-        JsonNode userInfo = getKakaoUserInfo(code);
+        String accessToken = getAccessToken(code);
+        JsonNode userInfo = getKakaoUserInfo(accessToken);
 
+        // 카카오 아이디값을 통해 member들을 유일하게 식별할 것이다
+        String kakaoKey = userInfo.get("id").toString();
         String email = userInfo.get("kaccount_email").toString();
         String nickname = userInfo.get("properties").get("nickname").toString();
         String image = userInfo.get("properties").get("profile_image").toString();
 
+        System.out.println(kakaoKey);
         System.out.println(email);
         System.out.println(nickname);
         System.out.println(image);
@@ -128,9 +143,56 @@ public class KakaoController {
          session : 전체 페이지에서 유효함
          model : 현재 페이지에서 유효함
          */
+        session.setAttribute("access_token", accessToken);
+        session.setAttribute("kakaoKey", kakaoKey);
+        /* 테스트 코드
         session.setAttribute("email", email);
         session.setAttribute("nickName", nickname);
         session.setAttribute("image", image);
+        */
+
+        List<Member> findMembers = memberService.findByKakaoKey(kakaoKey);
+        if(findMembers.isEmpty()) {
+            // 회원가입을 한 적 없는 경우
+            model.addAttribute("memberForm", new MemberForm());
+            return "member/createMemberForm";
+        } else {
+            /*
+             회원가입을 한 적 있는 경우
+             세션에 member_id를 추가한 후 첫 화면으로 redirect
+             */
+            session.setAttribute("member_id", findMembers.get(0).getId());
+            return "redirect:/";
+        }
+    }
+
+    // 로그아웃 : 미완성
+    @RequestMapping("/kakaoLogout")
+    public String kakaoLogout(HttpSession session) {
+
+        try {
+            String accessToken = session.getAttribute("access_token").toString();
+            String RequestUrl = "https://kapi.kakao.com/v1/user/logout";
+
+            final HttpClient client = HttpClientBuilder.create().build();
+            final HttpPost post = new HttpPost(RequestUrl);
+
+            post.addHeader("Authorization", "Bearer " + accessToken);
+            JsonNode returnNode = null;
+
+            final HttpResponse response = client.execute(post);
+            ObjectMapper mapper = new ObjectMapper();
+            returnNode = mapper.readTree(response.getEntity().getContent());
+
+            session.removeAttribute("access_token");
+
+        } catch (UnsupportedOperationException e) {
+            e.printStackTrace();
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         return "redirect:/";
     }

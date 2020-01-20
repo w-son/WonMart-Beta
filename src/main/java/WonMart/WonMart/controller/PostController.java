@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Controller
@@ -23,8 +24,8 @@ public class PostController { // 게시글 생성, 게시글 조회
     }
 
     @PostMapping("/post/new")
-    public String create(PostForm form) {
-        postService.post(form.getNickName(), form.getTitle(), form.getPrice(), form.getBody());
+    public String create(PostForm form, HttpSession session) {
+        postService.post((Long)session.getAttribute("member_id"), form.getTitle(), form.getPrice(), form.getBody());
 
         return "redirect:/";
     }
