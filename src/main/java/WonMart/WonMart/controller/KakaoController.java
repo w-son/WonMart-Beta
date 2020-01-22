@@ -159,9 +159,10 @@ public class KakaoController {
         } else {
             /*
              회원가입을 한 적 있는 경우
-             세션에 member_id를 추가한 후 첫 화면으로 redirect
+             세션에 member_id와 nickName을 추가한 후 첫 화면으로 redirect
              */
             session.setAttribute("member_id", findMembers.get(0).getId());
+            session.setAttribute("nickName", findMembers.get(0).getNickName());
             return "redirect:/";
         }
     }
@@ -170,28 +171,36 @@ public class KakaoController {
     @RequestMapping("/kakaoLogout")
     public String kakaoLogout(HttpSession session) {
 
-        try {
-            String accessToken = session.getAttribute("access_token").toString();
-            String RequestUrl = "https://kapi.kakao.com/v1/user/logout";
+        if(session.getAttribute("member_id") != null) {
 
-            final HttpClient client = HttpClientBuilder.create().build();
-            final HttpPost post = new HttpPost(RequestUrl);
+            try {
+                String accessToken = session.getAttribute("access_token").toString();
+                String RequestUrl = "https://kapi.kakao.com/v1/user/logout";
 
-            post.addHeader("Authorization", "Bearer " + accessToken);
-            JsonNode returnNode = null;
+                final HttpClient client = HttpClientBuilder.create().build();
+                final HttpPost post = new HttpPost(RequestUrl);
 
-            final HttpResponse response = client.execute(post);
-            ObjectMapper mapper = new ObjectMapper();
-            returnNode = mapper.readTree(response.getEntity().getContent());
+                post.addHeader("Authorization", "Bearer " + accessToken);
+                JsonNode returnNode = null;
 
-            session.removeAttribute("access_token");
+                final HttpResponse response = client.execute(post);
+                ObjectMapper mapper = new ObjectMapper();
+                returnNode = mapper.readTree(response.getEntity().getContent());
 
-        } catch (UnsupportedOperationException e) {
-            e.printStackTrace();
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+                // 저장했던 세션 정보를 모두 제거
+                session.removeAttribute("access_token");
+                session.removeAttribute("kakaoKey");
+                session.removeAttribute("member_id");
+                session.removeAttribute("nickName");
+
+            } catch (UnsupportedOperationException e) {
+                e.printStackTrace();
+            } catch (ClientProtocolException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
         }
 
         return "redirect:/";

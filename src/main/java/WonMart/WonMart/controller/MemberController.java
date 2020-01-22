@@ -35,8 +35,9 @@ public class MemberController { // 회원가입, 회원조회
         member.setAddress(address);
         Long member_id = memberService.join(member);
 
-        // 세션에 멤버의 id 값 저장
+        // 세션에 멤버의 id와 nickName 값 저장
         session.setAttribute("member_id", member_id);
+        session.setAttribute("nickName", member.getNickName());
 
         return "redirect:/";
     }
