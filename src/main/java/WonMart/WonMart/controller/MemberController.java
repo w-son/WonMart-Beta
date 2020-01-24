@@ -35,9 +35,38 @@ public class MemberController { // 회원가입, 회원조회
         member.setAddress(address);
         Long member_id = memberService.join(member);
 
-        // 세션에 멤버의 id와 nickName 값 저장
+        // 세션에 멤버의 정보를 저장
         session.setAttribute("member_id", member_id);
         session.setAttribute("nickName", member.getNickName());
+        session.setAttribute("address", member.getAddress());
+
+        return "redirect:/";
+    }
+
+    @GetMapping("/member/info")
+    public String memberInfo(Model model) {
+        model.addAttribute("memberForm", new MemberForm());
+
+        return "member/memberInfo";
+    }
+
+    @PostMapping("/member/info")
+    public String updateMemberInfo(@Valid MemberForm form, BindingResult result, HttpSession session) {
+
+        if(result.hasErrors()) {
+            return "member/memberInfo";
+        }
+
+        String nickName = form.getNickName();
+        Address address = new Address(form.getCity(), form.getStreet());
+
+        Long id = (Long) session.getAttribute("member_id");
+        memberService.updateMember(id, nickName, address);
+
+        Member updatedMember = memberService.findOne(id);
+
+        session.setAttribute("nickName", updatedMember.getNickName());
+        session.setAttribute("address", updatedMember.getAddress());
 
         return "redirect:/";
     }

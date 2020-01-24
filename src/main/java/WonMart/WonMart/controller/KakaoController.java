@@ -138,6 +138,12 @@ public class KakaoController {
         System.out.println(nickname);
         System.out.println(image);
 
+        session.setAttribute("access_token", null);
+        session.setAttribute("kakaoKey", null);
+        session.setAttribute("member_id", null);
+        session.setAttribute("nickName", null);
+        session.setAttribute("address", null);
+
         /*
          현재 세션에 로그인 정보를 추가한다
          session : 전체 페이지에서 유효함
@@ -156,6 +162,7 @@ public class KakaoController {
             // 회원가입을 한 적 없는 경우
             model.addAttribute("memberForm", new MemberForm());
             return "member/createMemberForm";
+
         } else {
             /*
              회원가입을 한 적 있는 경우
@@ -163,6 +170,7 @@ public class KakaoController {
              */
             session.setAttribute("member_id", findMembers.get(0).getId());
             session.setAttribute("nickName", findMembers.get(0).getNickName());
+            session.setAttribute("address", findMembers.get(0).getAddress());
             return "redirect:/";
         }
     }
@@ -192,6 +200,7 @@ public class KakaoController {
                 session.removeAttribute("kakaoKey");
                 session.removeAttribute("member_id");
                 session.removeAttribute("nickName");
+                session.removeAttribute("address");
 
             } catch (UnsupportedOperationException e) {
                 e.printStackTrace();

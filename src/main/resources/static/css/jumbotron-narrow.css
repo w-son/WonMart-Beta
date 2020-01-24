@@ -4,12 +4,12 @@ body {
 }
 /* Everything but the jumbotron gets side spacing for mobile first views */
 .header, .marketing, .footer {
-    padding-left: 15px;
-    padding-right: 15px;
+    padding-left: 0px;
+    padding-right: 0px;
 }
 /* Custom page header */
 .header {
-    border-bottom: 1px solid #e5e5e5;
+    border-bottom: 0px solid #e5e5e5;
 }
 /* Make the masthead heading the same height as the navigation */
 .header h3 {
@@ -25,9 +25,9 @@ body {
     border-top: 1px solid #e5e5e5;
 }
 /* Customize container */
-@media (min-width: 768px) {
+@media (min-width: 1000px) {
     .container {
-        max-width: 730px;
+        max-width: 1000px;
     }
 }
 .container-narrow > hr {
