@@ -20,21 +20,27 @@ public class LetterService { // 생성, 조회
     private final MemberRepository memberRepository;
 
     @Transactional
-    public Long send(Long member_id, String receiver, String body) {
-        userDoesNotExist(receiver);
-        Member member = memberRepository.findOne(member_id);
-        Letter letter = Letter.createLetter(member, member.getNickName(), receiver, body);
+    public Long send(Long sender_id, Long receiver_id, String body) {
+        Member sender = memberRepository.findOne(sender_id);
+        Member receiver = userDoesNotExist(receiver_id);
+        Letter letter = Letter.createLetter(sender, sender.getNickName(), receiver.getNickName(), body);
         letterRepository.save(letter);
 
         return letter.getId();
     }
 
     // 존재하는 수신자에게 쪽지를 작성하는 것인지 확인하는 로직
-    private void userDoesNotExist(String nickName) {
-        List<Member> findMembers = memberRepository.findByNickName(nickName);
-        if(findMembers.isEmpty()) {
+    private Member userDoesNotExist(Long id) {
+        Member findMember = memberRepository.findOne(id);
+        if(findMember == null) {
             throw new IllegalStateException("존재하지 않는 사용자입니다.");
+        } else {
+            return findMember;
         }
+    }
+
+    public Letter findOne(Long id) {
+        return letterRepository.findOne(id);
     }
 
     public List<Letter> findLetters() {

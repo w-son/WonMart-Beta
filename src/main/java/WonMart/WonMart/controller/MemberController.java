@@ -10,6 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -67,6 +68,21 @@ public class MemberController { // 회원가입, 회원조회
 
         session.setAttribute("nickName", updatedMember.getNickName());
         session.setAttribute("address", updatedMember.getAddress());
+
+        return "redirect:/";
+    }
+
+    @RequestMapping("/member/quit")
+    public String quitMember(HttpSession session) {
+        Long id = (Long) session.getAttribute("member_id");
+        Member member = memberService.findOne(id);
+        memberService.quit(member);
+
+        session.setAttribute("access_token", null);
+        session.setAttribute("kakaoKey", null);
+        session.setAttribute("member_id", null);
+        session.setAttribute("nickName", null);
+        session.setAttribute("address", null);
 
         return "redirect:/";
     }

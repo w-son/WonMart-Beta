@@ -3,16 +3,12 @@
 <div class="container">
     <div th:replace="fragments/bodyHeader :: bodyHeader"/>
 
-    <form th:action="@{/letter/new}" th:object="${form}" method="post">
+    <form th:action="@{/letter/{receiver_id}/new (receiver_id=${receiver_id})}" th:object="${form}" method="post">
         <div class="form-group">
-            <label th:for="title">수신자</label>
-            <input type="text" th:field="*{receiver}" class="form-control" placeholder="수신자">
-        </div>
-        <div class="form-group">
-            <label th:for="body">내용</label>
+            "<label th:for="body" th:text="${receiver_nickName}"></label>" 님에게 보내는 쪽지
             <input type="text" th:field="*{body}" class="form-control" placeholder="내용">
         </div>
-        <button type="submit" class="btn btn-outline-warning">보내기</button> </form>
+        <button type="submit" class="btn btn-outline-success rounded-0">보내기</button> </form>
     <br/>
     <div th:replace="fragments/footer :: footer" />
 </div> <!-- /container -->

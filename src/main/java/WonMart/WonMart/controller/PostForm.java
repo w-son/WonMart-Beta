@@ -15,4 +15,6 @@ public class PostForm {
 
     private String body;
 
+    private String image;
+
 }

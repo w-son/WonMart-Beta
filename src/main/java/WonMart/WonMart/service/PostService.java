@@ -21,9 +21,9 @@ public class PostService { // 생성, 삭제, 수정, 조회
     private final MemberRepository memberRepository;
 
     @Transactional
-    public Long post(Long member_id, String title, int price, String body) {
+    public Long post(Long member_id, String title, int price, String body, String image) {
         Member member = memberRepository.findOne(member_id);
-        Post post = Post.createPost(member, title, price, body);
+        Post post = Post.createPost(member, title, price, body, image);
         postRepository.save(post);
 
         return post.getId();
@@ -35,7 +35,7 @@ public class PostService { // 생성, 삭제, 수정, 조회
     }
 
     @Transactional
-    public void updatePost(Long id, String title, int price, String body) {
+    public void updatePost(Long id, String title, int price, String body, String image) {
         // 변경 감지
         Post post = postRepository.findOne(id);
 
@@ -43,6 +43,11 @@ public class PostService { // 생성, 삭제, 수정, 조회
         post.setPostTime(LocalDateTime.now());
         post.setPrice(price);
         post.setBody(body);
+        post.setImage(image);
+    }
+
+    public Post findOne(Long id) {
+        return postRepository.findOne(id);
     }
 
     public List<Post> findPosts() {
