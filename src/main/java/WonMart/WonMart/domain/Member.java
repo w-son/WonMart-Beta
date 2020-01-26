@@ -30,11 +30,11 @@ public class Member {
     private Address address;
 
     // Post와 OneToMany 연관관계
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<Post> posts = new ArrayList<>();
 
     // Letter과 OneToMany 연관관계
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<Letter> letters = new ArrayList<>();
 
     /*
