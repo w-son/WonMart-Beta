@@ -15,8 +15,8 @@
                 <p th:text="${post.body}"></p>
                 <!-- 작성자, 작성 시간-->
                 <ul class="list-unstyled pl-4">
-                    <li>작성자 : <i class="fa fa-check" th:text="${post.member.nickName}"></i></li>
-                    <li>작성시간 : <i class="fa fa-check" th:text="${post.postTime}"></i></li>
+                    <li>작성자 : <i class="fa font-italic" th:text="${post.member.nickName}"></i></li>
+                    <li>작성시간 : <i class="fa font-italic" th:text="${#temporals.format(post.postTime, 'yyyy-MM-dd HH:mm')}"></i></li>
                 </ul>
                 <a href="#" th:href="@{/letter/{receiver_id}/new (receiver_id=${post.member.id})}" class="btn btn-outline-success rounded-0">쪽지 보내기</a>
             </div>
