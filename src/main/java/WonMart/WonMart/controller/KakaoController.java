@@ -157,8 +157,8 @@ public class KakaoController {
         session.setAttribute("image", image);
         */
 
-        List<Member> findMembers = memberService.findByKakaoKey(kakaoKey);
-        if(findMembers.isEmpty()) {
+        Member findMember = memberService.findByKakaoKey(kakaoKey);
+        if(findMember == null) {
             // 회원가입을 한 적 없는 경우
             model.addAttribute("memberForm", new MemberForm());
             return "member/createMemberForm";
@@ -168,9 +168,9 @@ public class KakaoController {
              회원가입을 한 적 있는 경우
              세션에 member_id와 nickName을 추가한 후 첫 화면으로 redirect
              */
-            session.setAttribute("member_id", findMembers.get(0).getId());
-            session.setAttribute("nickName", findMembers.get(0).getNickName());
-            session.setAttribute("address", findMembers.get(0).getAddress());
+            session.setAttribute("member_id", findMember.getId());
+            session.setAttribute("nickName", findMember.getNickName());
+            session.setAttribute("address", findMember.getAddress());
             return "redirect:/";
         }
     }

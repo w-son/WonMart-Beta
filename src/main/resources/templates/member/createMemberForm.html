@@ -20,18 +20,18 @@
                     </div>
                     <input type="text" th:field="*{nickName}" class="form-control" placeholder="닉네임을 입력하세요"
                            th:class="${#fields.hasErrors('nickName')}? 'form-control fieldError' : 'form-control'">
-                    <p th:if="${#fields.hasErrors('nickName')}" th:errors="*{nickName}"></p>
                 </div>
+                <p th:if="${#fields.hasErrors('nickName')}" th:errors="*{nickName}"></p>
                 <!-- 도시 -->
                 <div class="form-group input-group">
                     <label th:for="city"></label>
                     <div class="input-group-prepend">
                         <span class="input-group-text"> <i class="fa fa-building"></i> </span>
                     </div>
-                    <input type="text" th:field="*{city}" class="form-control" placeholder="도시를 입력하세요"
+                    <input type="text" th:field="*{city}" class="form-control" placeholder="지역구정보를 입력하세요"
                            th:class="${#fields.hasErrors('city')}? 'form-control fieldError' : 'form-control'">
-                    <p th:if="${#fields.hasErrors('city')}" th:errors="*{city}"></p>
                 </div>
+                <p th:if="${#fields.hasErrors('city')}" th:errors="*{city}"></p>
                 <!-- 상세주소 -->
                 <div class="form-group input-group">
                     <label th:for="street"></label>
@@ -40,9 +40,8 @@
                     </div>
                     <input type="text" th:field="*{street}" class="form-control" placeholder="상세주소를 입력하세요"
                            th:class="${#fields.hasErrors('street')}? 'form-control fieldError' : 'form-control'">
-                    <p th:if="${#fields.hasErrors('street')}" th:errors="*{street}"></p>
                 </div>
-
+                <p th:if="${#fields.hasErrors('street')}" th:errors="*{street}"></p>
 
                 <div class="form-group">
                     <button type="submit" class="btn btn-outline-success btn-block"> 마트 입장 </button>
